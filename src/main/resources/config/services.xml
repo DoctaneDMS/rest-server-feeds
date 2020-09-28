@@ -33,28 +33,49 @@
             </array>            
         </property> 
     </bean>    
-
-    <!--- configure datasource -->
-    <bean id="feed.datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="#{systemEnvironment['DOCTANE_DATABASE_DRIVER']}" />
-        <property name="url" value="#{systemEnvironment['DOCTANE_DATABASE_URL']}" />
-        <property name="username" value="#{@K8SEnvironment.secrets['SCHEMA_USERNAME']?:systemEnvironment['DOCTANE_DATABASE_USER']}" />
-        <property name="password" value="#{@K8SEnvironment.secrets['SCHEMA_PASSWORD']?:systemEnvironment['DOCTANE_DATABASE_PASSWORD']}" />
-    </bean>     
-            
-    <bean id="database" class="com.softwareplumbers.feed.service.sql.MessageDatabase">
-        <property name="dataSource" ref="feed.datasource"/>
-        <property name="schema" ref="#{systemEnvironment['DOCTANE_DATABASE_VARIANT']}.feed.schema"/>
-        <property name="createOption" value="#{systemEnvironment['DOCTANE_DATABASE_CREATE_OPTION']}"/>
-        <property name="operations" ref="#{systemEnvironment['DOCTANE_DATABASE_VARIANT']}.feed.operations"/>
-        <property name="templates" ref="#{systemEnvironment['DOCTANE_DATABASE_VARIANT']}.feed.templates"/>
-    </bean>
+    
+    <bean id="FeedDatabaseConfigFactory"
+            class="org.springframework.beans.factory.config.ServiceLocatorFactoryBean">
+        <property name="serviceLocatorInterface" value="com.softwareplumbers.common.sql.DatabaseConfigFactory"/>
+        <property name="serviceMappings">
+            <props>
+                <prop key="MYSQL">mysql.feed.config</prop>
+                <prop key="ORACLE">oracle.feed.config</prop>
+                <prop key="H2">h2.feed.config</prop>
+            </props>
+        </property>
+    </bean>    
                       
     <!--- configure a feed service -->
     <bean id="test" class="com.softwareplumbers.feed.service.sql.SQLFeedService" scope="singleton">
-        <constructor-arg index="0" ref="database"/>
-        <constructor-arg index="1" value="1000000"/>
-        <constructor-arg index="2" value="10000"/>
+        <constructor-arg index="0" value="da7aa4a9-cb2d-4525-aa87-184f1ae1f642"/>
+        <constructor-arg index="1">
+            <bean class="com.softwareplumbers.feed.service.sql.MessageDatabase" scope="singleton">
+                <constructor-arg index="0" value="#{systemEnvironment['DOCTANE_DATABASE_URL']}"/>
+                <constructor-arg index="1">
+                    <props>
+                        <prop key="username">#{@K8SEnvironment.secrets['SCHEMA_USERNAME']?:systemEnvironment['DOCTANE_DATABASE_USER']}</prop>
+                        <prop key="password">#{@K8SEnvironment.secrets['SCHEMA_PASSWORD']?:systemEnvironment['DOCTANE_DATABASE_PASSWORD']}</prop>
+                    </props>
+                </constructor-arg>
+                <constructor-arg index="2" ref="FeedDatabaseConfigFactory"/>                
+                <constructor-arg index="3" value="#{systemEnvironment['DOCTANE_DATABASE_CREATE_OPTION']}"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="hostResolver" class="com.softwareplumbers.feed.rest.server.DummyResolver"/>
+    
+    <bean id="cluster" class="com.softwareplumbers.feed.impl.FilesystemCluster">
+        <constructor-arg index="0" type="int" value="4"/>
+        <constructor-arg index="1">
+            <array value-type="java.lang.String">
+                <value>#{systemEnvironment['DOCTANE_INSTALLATION_ROOT']}</value>
+                <value>cluster.json</value>
+            </array>            
+        </constructor-arg>
+        <constructor-arg index="2" value="http://localhost:8080"/>
+        <constructor-arg index="3" ref="hostResolver"/>
     </bean>
 
     <bean id ="keymgr" class="com.softwareplumbers.keymanager.KeyManager" scope="singleton">

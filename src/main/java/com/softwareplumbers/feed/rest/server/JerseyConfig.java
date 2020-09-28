@@ -20,8 +20,9 @@ public class JerseyConfig extends ResourceConfig {
 	    register(MultiPartFeature.class);
 	    register(AuthenticationFilter.class);
         register(Feeds.class);
+        register(Services.class);
+        register(Host.class);
         register(Converters.class);
         register(FeedExceptionMapper.class);
 	}
-
 }

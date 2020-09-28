@@ -29,6 +29,9 @@ public class FeedExceptionMapper implements ExceptionMapper<FeedExceptions.BaseE
             case INVALID_PATH:
                 builder = Response.status(Response.Status.NOT_FOUND);
                 break;
+            case INVALID_ID:
+                builder = Response.status(Response.Status.NOT_FOUND);
+                break;
             case INVALID_JSON:
                 builder = Response.status(Response.Status.BAD_REQUEST);
                 break;
