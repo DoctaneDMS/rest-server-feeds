@@ -35,4 +35,8 @@ public class RemoteFilters {
             } 
         }
     }
+    
+    public String toString() {
+        return predicates.toString();
+    }
 }

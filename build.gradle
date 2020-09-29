@@ -69,6 +69,7 @@ bootRun {
 test {
     systemProperties = System.properties
     environment = defaultEnvironment
+    systemProperty "logging.config", "classpath:config/logback-spring.xml"
     systemProperty "spring.datasource.hikari.maximum-pool-size", 20
     systemProperty "test.TestFeedService.testMessageRoundtripSingleThread.SEND_COUNT", 50
     systemProperty "test.TestFeedService.testMessageRoundtripMultipleThreads.SEND_COUNT", 20
@@ -255,7 +256,7 @@ dependencies {
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-processing', version: '2.25.1'
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-multipart', version: '2.25.1'
     compile group: 'com.softwareplumbers.oss', name:'rest-server-core', version: '0.5.8'
-    compile group: 'com.softwareplumbers.oss', name:'feed-interface-core', version: '0.0.23'
+    compile group: 'com.softwareplumbers.oss', name:'feed-interface-core', version: '0.0.25'
     compile group: 'javax.json', name: 'javax.json-api', version: '1.1.2'
     runtime group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.10.5'
     runtime group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.10.5'
@@ -267,11 +268,11 @@ dependencies {
     sqlService group: 'org.springframework.boot', name:'spring-boot-starter-jdbc'
     sqlService group: 'com.h2database', name: 'h2', version: '1.4.200'
     sqlService group: 'com.zaxxer', name: 'HikariCP', version: '3.4.2'
-    sqlService group: 'com.softwareplumbers.oss', name:'feed-service-sql', version: '0.0.20'
+    sqlService group: 'com.softwareplumbers.oss', name:'feed-service-sql', version: '0.0.21'
     sqlService group: 'com.oracle.jdbc', name: 'ojdbc8', version: '18.3.0.0'
     sqlService group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
     
     testCompile group: 'org.springframework.boot', name:'spring-boot-starter-test'
-    testCompile group: 'com.softwareplumbers.oss', name:'feed-client-spring', version: '0.0.7'
-    testCompile group: 'com.softwareplumbers.oss', name: 'feed-interface-core', version: '0.0.23', classifier: 'tests'
+    testCompile group: 'com.softwareplumbers.oss', name:'feed-client-spring', version: '0.0.8'
+    testCompile group: 'com.softwareplumbers.oss', name: 'feed-interface-core', version: '0.0.25', classifier: 'tests'
 }

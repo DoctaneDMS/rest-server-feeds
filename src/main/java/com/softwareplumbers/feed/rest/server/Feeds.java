@@ -187,7 +187,7 @@ public class Feeds {
             @Context HttpHeaders headers,
             @Suspended AsyncResponse response
     ) throws InvalidPath, InvalidId {
-        LOG.entry(repository, feedPath, fromTime, waitTime);
+        LOG.entry(repository, feedPath, fromTime, waitTime, fromInclusive, toTime, toInclusive, waitTime, serviceId, relay, filters);
         FeedService feedService = feedServiceFactory.getService(repository);
         
         UUID serviceUid = serviceId == null ? feedService.getServerId() : serviceId;
@@ -202,8 +202,8 @@ public class Feeds {
         } else {
             // We didn't specifically ask for Json, so we assume the user doesn't want metadata
             if (feedPath.part != null && feedPath.part.getId().isPresent()) {
-                // The last part of the path is and Id, so we are asking for an individual message
-                resume(response, feedService.search(feedPath));
+                // The last part of the path is and Id, so we are asking for an individual id
+                resume(response, feedService.search(feedPath, filters.getPredicates(feedService)));
             } else {        
                 // The path is to a feed, so we are searching/listening for messages in that feed
                 if (waitTime != 0) {
