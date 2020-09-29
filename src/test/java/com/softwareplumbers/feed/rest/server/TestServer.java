@@ -5,9 +5,11 @@
  */
 package com.softwareplumbers.feed.rest.server;
 
+import com.softwareplumbers.feed.FeedExceptions;
 import com.softwareplumbers.feed.FeedExceptions.InvalidPath;
 import com.softwareplumbers.feed.FeedExceptions.InvalidState;
 import com.softwareplumbers.feed.FeedPath;
+import com.softwareplumbers.feed.Filters;
 import com.softwareplumbers.feed.Message;
 import com.softwareplumbers.feed.TestFeedService;
 import com.softwareplumbers.feed.rest.client.spring.KeyPairs;
@@ -36,11 +38,12 @@ public class TestServer extends TestFeedService  {
     @Autowired KeyManager keyManager;
     
     @Test 
-    public void testUsernamePresentInPostedMessage() throws InvalidPath, InvalidState {
+    public void testUsernamePresentInPostedMessage() throws InvalidPath, InvalidState, FeedExceptions.InvalidId {
         Message message = TestUtils.generateMessage(TestUtils.randomFeedPath());
-        Message result = service.post(FeedPath.ROOT.add("test"), message);
+        Message ack = service.post(FeedPath.ROOT.add("test"), message);
         String username = keyManager.getCertificate(KeyPairs.DEFAULT_SERVICE_ACCOUNT).getSubjectDN().getName().substring(3);
-        assertThat(result.getSender(), equalTo(username));
+        Message searched = service.search(ack.getName(), Filters.NO_ACKS).next();
+        assertThat(searched.getSender(), equalTo(username));
     }
 }
 
