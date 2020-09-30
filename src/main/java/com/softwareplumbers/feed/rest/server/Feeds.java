@@ -169,6 +169,25 @@ public class Feeds {
         })); 
         LOG.exit();
     }
+ 
+    @GET
+    @Path("/{repository}")
+    @Produces({ MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_JSON })
+    public void listenRoot(
+            @PathParam("repository") String repository,
+            @QueryParam("from") Instant fromTime,
+            @QueryParam("fromInclusive") @DefaultValue("false") boolean fromInclusive,
+            @QueryParam("to") Instant toTime,
+            @QueryParam("toInclusive") Boolean toInclusive,
+            @QueryParam("wait") @DefaultValue("0") int waitTime,
+            @QueryParam("serviceId") UUID serviceId,
+            @QueryParam("relay") @DefaultValue("true") Boolean relay,
+            @QueryParam("filters") @DefaultValue("") RemoteFilters filters,
+            @Context HttpHeaders headers,
+            @Suspended AsyncResponse response
+    ) throws InvalidPath, InvalidId {
+        listen(repository, FeedPath.ROOT, fromTime, fromInclusive, toTime, toInclusive, waitTime, serviceId, relay, filters, headers, response);
+    }    
     
     @GET
     @Path("/{repository}/{feed:[^?]+}")
