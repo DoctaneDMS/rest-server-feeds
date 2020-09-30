@@ -188,6 +188,7 @@ artifacts {
     archives testsJar
     archives javadocJar
     archives war
+    archives jar
 }
 
 repositories {
@@ -242,6 +243,7 @@ dependencyManagement {
 
 war {
     classpath configurations.sqlService
+    classifier 'web'
 }
 
 configurations.all {
