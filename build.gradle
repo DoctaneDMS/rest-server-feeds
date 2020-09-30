@@ -221,6 +221,7 @@ uploadArchives {
       snapshotRepository(url: "https://nexus.softwareplumbers.com/repository/maven-oss-snapshot") {
       	authentication(userName: propValue("mavenUploadUser",""), password: propValue("mavenUploadPassword",""))
       }
+      pom.groupId='com.softwareplumbers.oss'
     }
   }
 }
