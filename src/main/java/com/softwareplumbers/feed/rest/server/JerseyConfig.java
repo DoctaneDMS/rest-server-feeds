@@ -24,5 +24,6 @@ public class JerseyConfig extends ResourceConfig {
         register(Host.class);
         register(Converters.class);
         register(FeedExceptionMapper.class);
+        register(CoreExceptionMapper.class);
 	}
 }
