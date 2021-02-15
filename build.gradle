@@ -276,6 +276,6 @@ dependencies {
     sqlService group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
     
     testCompile group: 'org.springframework.boot', name:'spring-boot-starter-test'
-    testCompile group: 'com.softwareplumbers.oss', name:'feed-client-spring', version: '0.0.11'
+    testCompile group: 'com.softwareplumbers.oss', name:'feed-client-spring', version: '0.0.12'
     testCompile group: 'com.softwareplumbers.oss', name: 'feed-interface-core', version: '0.0.31', classifier: 'tests'
 }
